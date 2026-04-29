@@ -1,0 +1,10 @@
+model_name_or_path: /path/to/model_or_adapter
+base_model_name_or_path:
+wavtokenizer_repo_path: /path/to/WavTokenizer
+wavtokenizer_config: /path/to/WavTokenizer/configs/wavtokenizer_smalldata_frame40_3s_nq1_code4096_dim512_kmeans200_attn.yaml
+wavtokenizer_checkpoint: /path/to/WavTokenizer/checkpoints/WavTokenizer-large-unify-40token/wavtokenizer_large_unify_600_24k.ckpt
+audio_sampling_rate: 16000
+speech_token_count: 4096
+max_new_tokens: 256
+temperature: 0.7
+top_p: 0.95
