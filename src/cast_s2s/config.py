@@ -44,15 +44,21 @@ class TrainConfig:
 @dataclass
 class InferenceConfig:
     model_name_or_path: str
-    wavtokenizer_repo_path: str
-    wavtokenizer_config: str
-    wavtokenizer_checkpoint: str
     base_model_name_or_path: str | None = None
+    codec_repo_id: str | None = "KrauthammerLab/cast-wavtokenizer-24k-40tps"
+    wavtokenizer_repo_path: str | None = None
+    wavtokenizer_config: str | None = None
+    wavtokenizer_checkpoint: str | None = None
     audio_sampling_rate: int = 16000
+    codec_sampling_rate: int = 24000
     speech_token_count: int = 4096
-    max_new_tokens: int = 256
+    codes_per_second: int = 40
+    seconds: float = 3.0
     temperature: float = 0.7
-    top_p: float = 0.95
+    top_p: float = 0.9
+    repetition_penalty: float = 1.1
+    keep_prompt_seconds: float = 1.0
+    crossfade_ms: int = 60
 
 
 def load_yaml(path: str | Path) -> dict[str, Any]:

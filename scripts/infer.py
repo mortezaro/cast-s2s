@@ -4,25 +4,24 @@ from __future__ import annotations
 import argparse
 import json
 import os
+from pathlib import Path
 
+import soundfile as sf
 import torch
 
 from cast_s2s.config import load_inference_config
 from cast_s2s.generation import (
-    audio_prompt,
-    generate,
-    generated_speech_codes,
+    build_speech_generation,
     load_generation_model,
     load_inference_wavtokenizer,
-    read_prompt,
 )
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
-    parser.add_argument("--audio")
-    parser.add_argument("--prompt")
+    parser.add_argument("--audio", required=True)
+    parser.add_argument("--output-dir", default="generated")
     parser.add_argument("--output-codes")
     return parser.parse_args()
 
@@ -42,39 +41,49 @@ def main():
         dtype,
     )
 
-    parts = []
-    text_prompt = read_prompt(args.prompt)
-    if text_prompt:
-        parts.append(text_prompt)
-    if args.audio:
-        wavtokenizer = load_inference_wavtokenizer(cfg, device)
-        parts.append(
-            audio_prompt(
-                args.audio,
-                wavtokenizer,
-                cfg.wavtokenizer_repo_path,
-                device,
-                cfg.audio_sampling_rate,
-            )
-        )
-
-    prompt = "".join(parts) or "[Speech]"
-    text = generate(
+    wavtokenizer = load_inference_wavtokenizer(cfg, device, token=token)
+    result = build_speech_generation(
         model,
         tokenizer,
-        prompt,
+        wavtokenizer,
+        args.audio,
+        cfg,
         device,
-        max_new_tokens=cfg.max_new_tokens,
-        temperature=cfg.temperature,
-        top_p=cfg.top_p,
     )
 
-    print(text)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    sf.write(
+        output_dir / "recon_24k.wav",
+        result.recon_audio.squeeze(0).float().cpu().numpy(),
+        cfg.codec_sampling_rate,
+    )
+    sf.write(
+        output_dir / "continuation.wav",
+        result.continuation_audio.squeeze(0).float().cpu().numpy(),
+        cfg.codec_sampling_rate,
+    )
+    sf.write(
+        output_dir / "stitched_24k.wav",
+        result.stitched_audio.squeeze(0).float().cpu().numpy(),
+        cfg.codec_sampling_rate,
+    )
 
-    if args.output_codes:
-        codes = generated_speech_codes(text)
-        with open(args.output_codes, "w", encoding="utf-8") as handle:
-            json.dump({"codes": codes}, handle)
+    print(result.text)
+    print(f"[INFO] Wrote {output_dir / 'recon_24k.wav'}")
+    print(f"[INFO] Wrote {output_dir / 'continuation.wav'}")
+    print(f"[INFO] Wrote {output_dir / 'stitched_24k.wav'}")
+
+    output_codes = Path(args.output_codes) if args.output_codes else output_dir / "codes.json"
+    output_codes.parent.mkdir(parents=True, exist_ok=True)
+    with output_codes.open("w", encoding="utf-8") as handle:
+        json.dump(
+            {
+                "prompt_codes": result.prompt_codes,
+                "generated_codes": result.generated_codes,
+            },
+            handle,
+        )
 
 
 if __name__ == "__main__":

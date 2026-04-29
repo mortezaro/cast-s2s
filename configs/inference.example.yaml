@@ -1,10 +1,16 @@
-model_name_or_path: /path/to/model_or_adapter
+model_name_or_path: KrauthammerLab/cast-0.7b-s2s
 base_model_name_or_path:
-wavtokenizer_repo_path: /path/to/WavTokenizer
-wavtokenizer_config: /path/to/WavTokenizer/configs/wavtokenizer_smalldata_frame40_3s_nq1_code4096_dim512_kmeans200_attn.yaml
-wavtokenizer_checkpoint: /path/to/WavTokenizer/checkpoints/WavTokenizer-large-unify-40token/wavtokenizer_large_unify_600_24k.ckpt
+codec_repo_id: KrauthammerLab/cast-wavtokenizer-24k-40tps
+wavtokenizer_repo_path:
+wavtokenizer_config:
+wavtokenizer_checkpoint:
 audio_sampling_rate: 16000
+codec_sampling_rate: 24000
 speech_token_count: 4096
-max_new_tokens: 256
+codes_per_second: 40
+seconds: 3.0
 temperature: 0.7
-top_p: 0.95
+top_p: 0.9
+repetition_penalty: 1.1
+keep_prompt_seconds: 1.0
+crossfade_ms: 60

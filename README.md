@@ -88,10 +88,18 @@ This keeps storage light and allows randomized text/speech interleaving across e
 python scripts/infer.py \
   --config configs/inference.example.yaml \
   --audio path/to/input.wav \
-  --prompt examples/prompt.txt
+  --output-dir generated/sample
 ```
 
-The CLI prints generated text and, when speech tokens are produced, writes them to a JSON file for downstream decoding.
+The inference CLI follows the published speech-to-speech path:
+
+1. Download or load the companion WavTokenizer codec.
+2. Encode a 16 kHz prompt into `[Sp1]` ... `[Sp4096]` speech tokens.
+3. Constrain generation so the LM can sample only speech tokens and EOS.
+4. Decode the generated codes at 24 kHz.
+5. Save `recon_24k.wav`, `continuation.wav`, `stitched_24k.wav`, and generated code IDs.
+
+The default example config points to the public CAST 0.7B checkpoint and companion codec. For local models, set `model_name_or_path`, `base_model_name_or_path`, and the codec fields in a local config.
 
 ## Checkpoints
 
