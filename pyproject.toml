@@ -28,7 +28,8 @@ train = ["evaluate>=0.4"]
 dev = ["pytest>=8.0", "ruff>=0.5"]
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
+include = ["speech_cast*"]
 
 [tool.ruff]
 line-length = 100

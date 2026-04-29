@@ -1,7 +1,7 @@
 model_name_or_path: google/gemma-3-4b-pt
 dataset_path: /path/to/hf_dataset
-output_dir: outputs/cast_s2s
-checkpoint_dir: checkpoints/cast_s2s
+output_dir: outputs/speech_cast
+checkpoint_dir: checkpoints/speech_cast
 hub_repo_id:
 
 wavtokenizer_repo_path: /path/to/WavTokenizer

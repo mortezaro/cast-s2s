@@ -7,11 +7,11 @@ import os
 import torch
 from transformers import Trainer, TrainingArguments
 
-from cast_s2s.audio_tokens import load_wavtokenizer
-from cast_s2s.callbacks import HubCheckpointCallback, SafeCheckpointCallback
-from cast_s2s.config import load_train_config
-from cast_s2s.data import InterleavedCollator, load_audio_dataset
-from cast_s2s.model import (
+from speech_cast.checkpointing import HubCheckpointCallback, SafeCheckpointCallback
+from speech_cast.codec import load_wavtokenizer
+from speech_cast.config import load_train_config
+from speech_cast.datasets import InterleavedCollator, load_audio_dataset
+from speech_cast.language_model import (
     apply_lora,
     load_asr_pipeline,
     load_causal_model,

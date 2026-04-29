@@ -9,7 +9,7 @@ import datasets as ds
 import numpy as np
 import torch
 
-from .audio_tokens import codes_to_text, encode_audio
+from .codec import codes_to_text, encode_audio
 
 
 def load_audio_dataset(path: str, sampling_rate: int, split_ratio: float, seed: int):

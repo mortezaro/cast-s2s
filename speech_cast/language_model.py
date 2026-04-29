@@ -8,7 +8,7 @@ import transformers as ts
 from peft import LoraConfig, TaskType, get_peft_model
 from transformers import Gemma3ForCausalLM
 
-from .audio_tokens import speech_tokens
+from .codec import speech_tokens
 
 
 def local_device_map() -> str | dict[str, int]:

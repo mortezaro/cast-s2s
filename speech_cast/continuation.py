@@ -9,7 +9,7 @@ import torchaudio
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, LogitsProcessor, LogitsProcessorList
 
-from .audio_tokens import (
+from .codec import (
     codes_to_text,
     decode_codes,
     load_wavtokenizer,

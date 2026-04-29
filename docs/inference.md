@@ -18,7 +18,7 @@ The companion codec defaults to `KrauthammerLab/cast-wavtokenizer-24k-40tps`. If
 Run:
 
 ```bash
-python scripts/infer.py \
+python inference/generate_continuation.py \
   --config configs/inference.example.yaml \
   --audio prompt_16k.wav \
   --output-dir generated/prompt_001

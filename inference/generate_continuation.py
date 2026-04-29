@@ -9,8 +9,8 @@ from pathlib import Path
 import soundfile as sf
 import torch
 
-from cast_s2s.config import load_inference_config
-from cast_s2s.generation import (
+from speech_cast.config import load_inference_config
+from speech_cast.continuation import (
     build_speech_generation,
     load_generation_model,
     load_inference_wavtokenizer,

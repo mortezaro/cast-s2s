@@ -1,5 +1,5 @@
-from cast_s2s.audio_tokens import codes_to_text, speech_tokens, text_to_codes
-from cast_s2s.data import split_audio
+from speech_cast.codec import codes_to_text, speech_tokens, text_to_codes
+from speech_cast.datasets import split_audio
 
 
 def test_speech_token_names_are_one_indexed():

@@ -12,7 +12,7 @@ The code is intentionally model- and dataset-agnostic. Credentials, local paths,
 - Train/validation splitting for Hugging Face datasets saved on disk
 - Safe checkpointing for adapters, tokenizer files, and trainer state
 - Inference utilities for audio-to-token, prompt construction, generation, and token extraction
-- Minimal scripts that keep experiments reproducible without notebook state
+- Minimal training and inference entrypoints that keep experiments reproducible without notebook state
 
 ## Repository Layout
 
@@ -23,20 +23,21 @@ The code is intentionally model- and dataset-agnostic. Credentials, local paths,
 │   └── inference.example.yaml
 ├── docs/
 │   ├── data_format.md
+│   ├── inference.md
 │   └── training_notes.md
 ├── examples/
 │   └── prompt.txt
-├── scripts/
-│   ├── train.py
-│   └── infer.py
-├── src/
-│   └── cast_s2s/
-│       ├── audio_tokens.py
-│       ├── callbacks.py
-│       ├── config.py
-│       ├── data.py
-│       ├── generation.py
-│       └── model.py
+├── inference/
+│   └── generate_continuation.py
+├── speech_cast/
+│   ├── checkpointing.py
+│   ├── codec.py
+│   ├── config.py
+│   ├── continuation.py
+│   ├── datasets.py
+│   └── language_model.py
+├── training/
+│   └── train_interleaved.py
 └── tests/
     └── test_sequence_format.py
 ```
@@ -69,7 +70,7 @@ Copy the example config and adjust paths:
 
 ```bash
 cp configs/train.example.yaml configs/train.local.yaml
-python scripts/train.py --config configs/train.local.yaml
+python training/train_interleaved.py --config configs/train.local.yaml
 ```
 
 The dataset should be a Hugging Face dataset saved with `datasets.save_to_disk`. It needs an `audio` column that can be cast to `datasets.Audio`.
@@ -85,7 +86,7 @@ This keeps storage light and allows randomized text/speech interleaving across e
 ## Inference
 
 ```bash
-python scripts/infer.py \
+python inference/generate_continuation.py \
   --config configs/inference.example.yaml \
   --audio path/to/input.wav \
   --output-dir generated/sample
